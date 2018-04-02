@@ -177,6 +177,10 @@ public class DefaultCommentGenerator implements CommentGenerator {
     @Override
     public void addClassComment(InnerClass innerClass,
             IntrospectedTable introspectedTable) {
+        innerClass.addJavaDocLine("/**");
+        innerClass.addJavaDocLine(" * @table " + introspectedTable.getFullyQualifiedTable());
+        innerClass.addJavaDocLine(" */");
+        
         if (suppressAllComments) {
             return;
         }
@@ -199,6 +203,10 @@ public class DefaultCommentGenerator implements CommentGenerator {
     @Override
     public void addClassComment(InnerClass innerClass,
             IntrospectedTable introspectedTable, boolean markAsDoNotDelete) {
+        innerClass.addJavaDocLine("/**");
+        innerClass.addJavaDocLine(" * @table " + introspectedTable.getFullyQualifiedTable());
+        innerClass.addJavaDocLine(" */");
+        
         if (suppressAllComments) {
             return;
         }
@@ -221,13 +229,21 @@ public class DefaultCommentGenerator implements CommentGenerator {
     @Override
     public void addModelClassComment(TopLevelClass topLevelClass,
             IntrospectedTable introspectedTable) {
+        topLevelClass.addJavaDocLine("/**");
+        topLevelClass.addJavaDocLine(" * @table " + introspectedTable.getFullyQualifiedTable());
+        String remarks = introspectedTable.getRemarks();
+        if (StringUtility.stringHasValue(remarks)) {
+            topLevelClass.addJavaDocLine(" * " + remarks);
+        }
+        topLevelClass.addJavaDocLine(" */");
+
         if (suppressAllComments  || !addRemarkComments) {
             return;
         }
 
         topLevelClass.addJavaDocLine("/**"); //$NON-NLS-1$
 
-        String remarks = introspectedTable.getRemarks();
+        // String remarks = introspectedTable.getRemarks();
         if (addRemarkComments && StringUtility.stringHasValue(remarks)) {
             topLevelClass.addJavaDocLine(" * Database Table Remarks:"); //$NON-NLS-1$
             String[] remarkLines = remarks.split(System.getProperty("line.separator"));  //$NON-NLS-1$
@@ -274,13 +290,24 @@ public class DefaultCommentGenerator implements CommentGenerator {
     public void addFieldComment(Field field,
             IntrospectedTable introspectedTable,
             IntrospectedColumn introspectedColumn) {
+        String remarks = introspectedColumn.getRemarks();
+        if (StringUtility.stringHasValue(remarks)) {
+            field.addJavaDocLine("/**");
+            String defaultValue = introspectedColumn.getDefaultValue();
+            if (null != defaultValue && !"".equals(defaultValue)) {
+                remarks += "(默认值为:" + defaultValue + ")";
+            }
+            field.addJavaDocLine(" * " + remarks);
+            field.addJavaDocLine(" */");
+        }
+        
         if (suppressAllComments) {
             return;
         }
 
         field.addJavaDocLine("/**"); //$NON-NLS-1$
 
-        String remarks = introspectedColumn.getRemarks();
+        // String remarks = introspectedColumn.getRemarks();
         if (addRemarkComments && StringUtility.stringHasValue(remarks)) {
             field.addJavaDocLine(" * Database Column Remarks:"); //$NON-NLS-1$
             String[] remarkLines = remarks.split(System.getProperty("line.separator"));  //$NON-NLS-1$

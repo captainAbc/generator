@@ -30,6 +30,7 @@ import org.mybatis.generator.codegen.AbstractJavaClientGenerator;
 import org.mybatis.generator.codegen.AbstractXmlGenerator;
 import org.mybatis.generator.codegen.mybatis3.javamapper.elements.AbstractJavaMapperMethodGenerator;
 import org.mybatis.generator.codegen.mybatis3.javamapper.elements.CountByExampleMethodGenerator;
+import org.mybatis.generator.codegen.mybatis3.javamapper.elements.CustomMethodGenerator;
 import org.mybatis.generator.codegen.mybatis3.javamapper.elements.DeleteByExampleMethodGenerator;
 import org.mybatis.generator.codegen.mybatis3.javamapper.elements.DeleteByPrimaryKeyMethodGenerator;
 import org.mybatis.generator.codegen.mybatis3.javamapper.elements.InsertMethodGenerator;
@@ -86,20 +87,25 @@ public class JavaMapperGenerator extends AbstractJavaClientGenerator {
             interfaze.addImportedType(fqjt);
         }
 
-        addCountByExampleMethod(interfaze);
-        addDeleteByExampleMethod(interfaze);
-        addDeleteByPrimaryKeyMethod(interfaze);
-        addInsertMethod(interfaze);
-        addInsertSelectiveMethod(interfaze);
         addSelectByExampleWithBLOBsMethod(interfaze);
         addSelectByExampleWithoutBLOBsMethod(interfaze);
-        addSelectByPrimaryKeyMethod(interfaze);
+        addCountByExampleMethod(interfaze);
+        
         addUpdateByExampleSelectiveMethod(interfaze);
-        addUpdateByExampleWithBLOBsMethod(interfaze);
-        addUpdateByExampleWithoutBLOBsMethod(interfaze);
+        addDeleteByExampleMethod(interfaze);
+        addDeleteByPrimaryKeyMethod(interfaze);
+        //        addInsertMethod(interfaze);
+        addInsertSelectiveMethod(interfaze);
+        addSelectByPrimaryKeyMethod(interfaze);
+        //        addUpdateByExampleWithBLOBsMethod(interfaze);
+        //        addUpdateByExampleWithoutBLOBsMethod(interfaze);
         addUpdateByPrimaryKeySelectiveMethod(interfaze);
-        addUpdateByPrimaryKeyWithBLOBsMethod(interfaze);
-        addUpdateByPrimaryKeyWithoutBLOBsMethod(interfaze);
+        //        addUpdateByPrimaryKeyWithBLOBsMethod(interfaze);
+        //        addUpdateByPrimaryKeyWithoutBLOBsMethod(interfaze);
+        
+        // 自定义Dao方法
+        AbstractJavaMapperMethodGenerator methodGenerator = new CustomMethodGenerator();
+        initializeAndExecuteGenerator(methodGenerator, interfaze);
 
         List<CompilationUnit> answer = new ArrayList<CompilationUnit>();
         if (context.getPlugins().clientGenerated(interfaze, null,
