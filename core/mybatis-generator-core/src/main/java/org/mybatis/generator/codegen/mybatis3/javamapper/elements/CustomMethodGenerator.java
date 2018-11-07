@@ -46,7 +46,7 @@ public class CustomMethodGenerator extends AbstractJavaMapperMethodGenerator {
         FullyQualifiedJavaType type = new FullyQualifiedJavaType(introspectedTable.getBaseRecordType() + "Dto");
         FullyQualifiedJavaType returnType = new FullyQualifiedJavaType("java.util.List");
         importedTypes.add(type);
-        importedTypes.add(returnType);
+        //importedTypes.add(returnType);
 
         Method method = new Method();
         method.setVisibility(JavaVisibility.PUBLIC);
@@ -109,6 +109,8 @@ public class CustomMethodGenerator extends AbstractJavaMapperMethodGenerator {
         method.addParameter(new Parameter(parameterType, "record", "@Param(\"record\")"));
         method.addParameter(new Parameter(type, "condition", "@Param(\"condition\")"));
 
+        importedTypes.add(new FullyQualifiedJavaType("org.apache.ibatis.annotations.Param"));
+        
         context.getCommentGenerator().addGeneralMethodComment(method, introspectedTable);
 
         addMapperAnnotations(interfaze, method);
